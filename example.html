@@ -22,12 +22,20 @@ def foo(items):
     x += ' and fred'
     return x
 </div>
-    
+
 <script src="http://d1n0x3qji82z53.cloudfront.net/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/chrome");
     editor.getSession().setMode("ace/mode/python");
+
+    editor.getSession().on('change', function(e) {
+            console.log(e.data.action);
+            console.log(e.data.text);
+            $.post("/test", e.data.action + " with '" + e.data.text + "'");
+        });
+
 </script>
 </body>
 </html>
