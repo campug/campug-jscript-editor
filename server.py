@@ -86,8 +86,8 @@ class CompletionHandler(tornado.web.RequestHandler, SessionsMixin):
         session = self.get_session()
         source = ''.join(session.lines)
         # TEMP HACK: always be at the end
-        line = source.count('\n')
-        column = source.rfind('\n')
+        line = source.count('\n') + 1
+        column = len(source) - source.rfind('\n')
         script = jedi.Script(source, line, column, session.filename)
         completions = script.complete()
         data = {'completions': [c.complete for c in completions]}

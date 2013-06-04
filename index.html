@@ -40,9 +40,9 @@
 
     editor.commands.bindKey('ctrl-space', function(e) {
         console.log("CTRL-SPACE PRESSED");
-        var responseObj = $.post("/completions");
-        var response = JSON.parse(responseObj.responseText);
-        console.log("COMPLETIONS: " + response.completions);
+        $.post("/completions", {}, function(response){
+            console.log("COMPLETIONS: " + response.completions);
+        }, "json");
         return false;
     });
 </script>
