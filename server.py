@@ -5,6 +5,9 @@ import json
 import uuid
 import tornado.ioloop
 import tornado.web
+import jedi
+
+from tornado.escape import json_encode
 
 
 sessions = {}
@@ -19,7 +22,7 @@ class Session(object):
 class SessionsMixin(object):
     def new_session(self):
         # lines: a list of the document lines, without newlines.
-        return Session(lines=[u''])
+        return Session(lines=[u''], filename=u'')
 
     def get_session(self):
         uid = self.get_cookie('uid', None)
@@ -78,9 +81,23 @@ class EditorHandler(tornado.web.RequestHandler, SessionsMixin):
             session.lines[edit.row:edit.endrow] = []
 
 
+class CompletionHandler(tornado.web.RequestHandler, SessionsMixin):
+    def post(self):
+        session = self.get_session()
+        source = ''.join(session.lines)
+        # TEMP HACK: always be at the end
+        line = source.count('\n')
+        column = source.rfind('\n')
+        script = jedi.Script(source, line, column, session.filename)
+        completions = script.complete()
+        data = {'completions': [c.complete for c in completions]}
+        self.write(json_encode(data))
+
+
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/edit", EditorHandler),
+    (r"/completions", CompletionHandler),
 ])
 
 

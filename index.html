@@ -38,24 +38,13 @@
         $.post("/edit", JSON.stringify(e.data));
     });
 
-/*
-    editor.commands.addCommand({
-        name: 'autocomplete',
-        bindKey: {win: 'Tab', mac: 'Tab'},
-        exec: function(editor) {
-            console.log("TAB PRESSED");
-            return true;
-        },
-        readOnly: false  // not in readOnly mode
+    editor.commands.bindKey('ctrl-space', function(e) {
+        console.log("CTRL-SPACE PRESSED");
+        var responseObj = $.post("/completions");
+        var response = JSON.parse(responseObj.responseText);
+        console.log("COMPLETIONS: " + response.completions);
+        return false;
     });
-*/
-
-    editor.keyBinding.addKeyboardHandler(new HashHandler({
-        'Tab': function() {
-            console.log("TAB PRESSED");
-            return false;
-        }
-    }));
 </script>
 </body>
 </html>
