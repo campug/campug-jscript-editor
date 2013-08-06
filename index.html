@@ -25,7 +25,7 @@
     -->
 
 <div id="editor">{{ document }}</div>
-<div id="completions" style="margin-left: 40px; margin-top: 20px">
+<div id="completions" style="left: 40px; top: 20px; position: absolute">
     <ul id="completion-list"></ul>
 </div>
 
@@ -50,6 +50,10 @@
                $("#completion-list").append(li);
             });
         }, "json");
+        var left = $(".ace_cursor").position().left
+        var top = $(".ace_cursor").position().top
+        $("#completions").css("left", left)
+        $("#completions").css("top", top)
         return false;
     });
 </script>
